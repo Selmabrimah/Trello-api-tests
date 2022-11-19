@@ -1,0 +1,1788 @@
+{
+	"info": {
+		"_postman_id": "bf229fdf-1aed-4145-a020-5b551e775b79",
+		"name": "Trello Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18404308"
+	},
+	"item": [
+		{
+			"name": "Board",
+			"item": [
+				{
+					"name": "Create a Board",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const boardName = pm.variables.replaceIn('{{$randomInt}}');",
+									"let name= pm.environment.set(\"name\", \"Test Board \" + boardName);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"pm.collectionVariables.set(\"id\", response.id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"{{name}}\",\n    \"defaultLists\": true,\n    \"idOrganization\": \"6374fadec7566c01e6cf9a7e\",\n    \"prefs_background_url\": \"https://images.unsplash.com/photo-1668423389856-2a82e96ee01b?ixid=Mnw3MDY2fDB8MXxjb2xsZWN0aW9ufDF8MzE3MDk5fHx8fHwyfHwxNjY4NjY5OTE1&ixlib=rb-4.0.3&w=2560&h=2048&q=90\",\n    \"prefs_permissionLevel\": \"org\",\n    \"prefs_selfJoin\": true,\n    \"token\": \"{{token}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/1/boards//?name={{name}}&key={{key}}&token={{token}}",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"1",
+								"boards",
+								"",
+								""
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "{{name}}"
+								},
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Memberships of all Boards",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var response = pm.response.json();",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Check Elements in the Array\", function () {",
+									"    response.forEach((membershipBoard) => {",
+									"    pm.expect(membershipBoard).to.have.property('id');",
+									"    pm.expect(membershipBoard).to.have.property('url');",
+									"    pm.expect(membershipBoard).to.have.property('name');",
+									"    });",
+									"});",
+									"",
+									"pm.test(\"Response should never be empty \", function () {",
+									"    pm.response.to.not.equal(null);",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BaseUrl}}/1/members/me/boards?fields=name,url&key={{key}}&token={{token}}",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"1",
+								"members",
+								"me",
+								"boards"
+							],
+							"query": [
+								{
+									"key": "fields",
+									"value": "name,url"
+								},
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Memberships of a Board",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var response = pm.response.json();",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Check Elements in the Array\", function () {",
+									"    response.forEach((membershipBoard) => {",
+									"    pm.expect(membershipBoard).to.have.property('id');",
+									"    pm.expect(membershipBoard).to.have.property('idMember');",
+									"    pm.expect(membershipBoard).to.have.property('memberType');",
+									"    pm.expect(membershipBoard).to.have.property('unconfirmed');",
+									"    pm.expect(membershipBoard).to.have.property('deactivated');",
+									"    });",
+									"});",
+									"",
+									"pm.test(\"Response should never be empty \", function () {",
+									"    pm.response.to.not.equal(null);",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/1/boards/:id/memberships?key={{key}}&token={{token}}",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"1",
+								"boards",
+								":id",
+								"memberships"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Lists of Board",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var response = pm.response.json();",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Check Elements in the Array\", function () {",
+									"    response.forEach((allBoard) => {",
+									"    pm.expect(allBoard).to.have.property('id');",
+									"    pm.expect(allBoard).to.have.property('name');",
+									"    pm.expect(allBoard).to.have.property('desc');",
+									"    pm.expect(allBoard).to.have.property('closed');",
+									"    pm.expect(allBoard).to.have.property('idOrganization');",
+									"    pm.expect(allBoard).to.have.property('url');",
+									"    pm.expect(allBoard).to.have.property('ixUpdate');",
+									"    pm.expect(allBoard).to.have.property('idMemberCreator');",
+									"    pm.expect(allBoard).to.have.property('memberships');",
+									"    pm.expect(allBoard).to.have.property('powerUps');",
+									"    pm.expect(allBoard).to.have.property('premiumFeatures');",
+									"    });",
+									"});",
+									"",
+									"pm.test(\"Response should never be empty \", function () {",
+									"    pm.expect(response).to.not.equal(null);",
+									"});",
+									"pm.test(\"Response should be an Array\", function () {",
+									"    pm.expect(response).to.be.an(\"array\")",
+									"});",
+									"pm.test(\"Check Elements in the Array\", function () {",
+									"    response.forEach((allBoard) => {",
+									"    allBoard.premiumFeatures.forEach(premiumFeature=> {",
+									"    pm.expect(premiumFeature).to.not.equal(null);",
+									"    ",
+									"    })",
+									"});",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BaseUrl}}/1/members/me/boards?key={{key}}&token={{token}}",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"1",
+								"members",
+								"me",
+								"boards"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a Board",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/1/boards/:id?key={{key}}&token={{token}}",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"1",
+								"boards",
+								":id"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update a Board",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/1/boards/:id?key={{key}}&token={{token}}",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"1",
+								"boards",
+								":id"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Fields of a Board",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/1/boards/:id/:field?key={{key}}&token={{token}}",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"1",
+								"boards",
+								":id",
+								":field"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{id}}"
+								},
+								{
+									"key": "field",
+									"value": "url"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Actions of a Board",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/1/boards/:boardId/actions?key={{key}}&token={{token}}",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"1",
+								"boards",
+								":boardId",
+								"actions"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "boardId",
+									"value": "{{idBoard}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Geta Card on a Board",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/1/boards/:id/cards/:idCard?key={{key}}&token={{token}}",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"1",
+								"boards",
+								":id",
+								"cards",
+								":idCard"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{id}}"
+								},
+								{
+									"key": "idCard",
+									"value": "id"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Cards on a Board",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/1/boards/:id/cards?key={{key}}&token={{token}}",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"1",
+								"boards",
+								":id",
+								"cards"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Filtered Cards on a Board",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/1/boards/:id/cards/:filter?key={{key}}&token={{token}}",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"1",
+								"boards",
+								":id",
+								"cards",
+								":filter"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{id}}"
+								},
+								{
+									"key": "filter",
+									"value": "all"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Geta boardStars on a Board",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/1/boards/:boardId/boardStars?key={{key}}&token={{token}}",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"1",
+								"boards",
+								":boardId",
+								"boardStars"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "boardId",
+									"value": "{{idBoard}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a Checklists On a Board",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/1/boards/:id/checklists?key={{key}}&token={{token}}",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"1",
+								"boards",
+								":id",
+								"checklists"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Custom Fields for Board",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/1/boards/:id/customFields?key={{key}}&token={{token}}",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"1",
+								"boards",
+								":id",
+								"customFields"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Label on a Board",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/1/boards/:id/labels?name=team apple&color=pink&key={{key}}&token={{token}}",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"1",
+								"boards",
+								":id",
+								"labels"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "team apple"
+								},
+								{
+									"key": "color",
+									"value": "pink"
+								},
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Labels on a Board",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/1/boards/:id/labels?key={{key}}&token={{token}}",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"1",
+								"boards",
+								":id",
+								"labels"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Lists on a Board",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/1/boards/:id/lists?name={{name}}&pos=top&key={{key}}&token={{token}}",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"1",
+								"boards",
+								":id",
+								"lists"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "{{name}}"
+								},
+								{
+									"key": "pos",
+									"value": "top"
+								},
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Lists on a Board",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/1/boards/:id/lists?key={{key}}&token={{token}}",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"1",
+								"boards",
+								":id",
+								"lists"
+							],
+							"query": [
+								{
+									"key": "cards",
+									"value": "all",
+									"disabled": true
+								},
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Filtered Lists on a Board",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/1/boards/:id/lists/:filter?key={{key}}&token={{token}}",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"1",
+								"boards",
+								":id",
+								"lists",
+								":filter"
+							],
+							"query": [
+								{
+									"key": "cards",
+									"value": "all",
+									"disabled": true
+								},
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{id}}"
+								},
+								{
+									"key": "filter",
+									"value": "all"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Members of a Board",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/1/boards/:id/members?key={{key}}&token={{token}}",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"1",
+								"boards",
+								":id",
+								"members"
+							],
+							"query": [
+								{
+									"key": "cards",
+									"value": "all",
+									"disabled": true
+								},
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Invite Member to Board via email",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/1/boards/:id/members?email={{email}}&key={{key}}&token={{token}}",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"1",
+								"boards",
+								":id",
+								"members"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "{{email}}"
+								},
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								},
+								{
+									"key": "cards",
+									"value": "all",
+									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add a Member to Board",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/1/boards/:id/members/:idMember?key={{key}}&token={{token}}&type=admin",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"1",
+								"boards",
+								":id",
+								"members",
+								":idMember"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								},
+								{
+									"key": "cards",
+									"value": "all",
+									"disabled": true
+								},
+								{
+									"key": "type",
+									"value": "admin"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{id}}"
+								},
+								{
+									"key": "idMember",
+									"value": "{{idMember}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Membership of Member on a Board",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/1/boards/:id/memberships/:idMembership?key={{key}}&token={{token}}&type=admin",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"1",
+								"boards",
+								":id",
+								"memberships",
+								":idMembership"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								},
+								{
+									"key": "cards",
+									"value": "all",
+									"disabled": true
+								},
+								{
+									"key": "type",
+									"value": "admin"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{id}}"
+								},
+								{
+									"key": "idMembership",
+									"value": "637240c29dcd620084d5acce"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove Member to Board",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/1/boards/:id/members/:idMember?token={{token}}&key={{key}}",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"1",
+								"boards",
+								":id",
+								"members",
+								":idMember"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "{{token}}"
+								},
+								{
+									"key": "cards",
+									"value": "all",
+									"disabled": true
+								},
+								{
+									"key": "key",
+									"value": "{{key}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{id}}"
+								},
+								{
+									"key": "idMember",
+									"value": "{{idMember}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update emailPosition Pref on a Board",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/1/boards/:id/myPrefs/emailPosition?value=top&token={{token}}&key={{key}}",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"1",
+								"boards",
+								":id",
+								"myPrefs",
+								"emailPosition"
+							],
+							"query": [
+								{
+									"key": "value",
+									"value": "top"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								},
+								{
+									"key": "key",
+									"value": "{{key}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update idEmailList Pref on a Board",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/1/boards/:id/myPrefs/idEmailList?value=5abbe4b7ddc1b351ef961414&token={{token}}&key={{key}}",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"1",
+								"boards",
+								":id",
+								"myPrefs",
+								"idEmailList"
+							],
+							"query": [
+								{
+									"key": "value",
+									"value": "5abbe4b7ddc1b351ef961414"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								},
+								{
+									"key": "key",
+									"value": "{{key}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update showListGuide Pref on a Board",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/1/boards/:id/myPrefs/showListGuide?value=true&token={{token}}&key={{key}}",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"1",
+								"boards",
+								":id",
+								"myPrefs",
+								"showListGuide"
+							],
+							"query": [
+								{
+									"key": "value",
+									"value": "true"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								},
+								{
+									"key": "key",
+									"value": "{{key}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update showSidebar Pref on a Board",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/1/boards/:id/myPrefs/showSidebar?value=true&token={{token}}&key={{key}}",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"1",
+								"boards",
+								":id",
+								"myPrefs",
+								"showSidebar"
+							],
+							"query": [
+								{
+									"key": "value",
+									"value": "true"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								},
+								{
+									"key": "key",
+									"value": "{{key}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update showSidebarActivity Pref on a Board",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/1/boards/:id/myPrefs/showSidebarActivity?value=true&token={{token}}&key={{key}}",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"1",
+								"boards",
+								":id",
+								"myPrefs",
+								"showSidebarActivity"
+							],
+							"query": [
+								{
+									"key": "value",
+									"value": "true"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								},
+								{
+									"key": "key",
+									"value": "{{key}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update showSidebarBoardActions Pref on a Board",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/1/boards/:id/myPrefs/showSidebarBoardActions?value=true&token={{token}}&key={{key}}",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"1",
+								"boards",
+								":id",
+								"myPrefs",
+								"showSidebarBoardActions"
+							],
+							"query": [
+								{
+									"key": "value",
+									"value": "true"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								},
+								{
+									"key": "key",
+									"value": "{{key}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update showSidebarMembers Pref on a Board",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/1/boards/:id/myPrefs/showSidebarMembers?value=true&token={{token}}&key={{key}}",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"1",
+								"boards",
+								":id",
+								"myPrefs",
+								"showSidebarMembers"
+							],
+							"query": [
+								{
+									"key": "value",
+									"value": "true"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								},
+								{
+									"key": "key",
+									"value": "{{key}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a calendarKey for a Board",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/1/boards/:id/calendarKey/generate?token={{token}}&key={{key}}",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"1",
+								"boards",
+								":id",
+								"calendarKey",
+								"generate"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "{{token}}"
+								},
+								{
+									"key": "key",
+									"value": "{{key}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a emailKey for a Board",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/1/boards/:id/emailKey/generate?token={{token}}&key={{key}}",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"1",
+								"boards",
+								":id",
+								"emailKey",
+								"generate"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "{{token}}"
+								},
+								{
+									"key": "key",
+									"value": "{{key}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a Tag for a Board",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/1/boards/:id/idTags?value=&token={{token}}&key={{key}}",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"1",
+								"boards",
+								":id",
+								"idTags"
+							],
+							"query": [
+								{
+									"key": "value",
+									"value": ""
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								},
+								{
+									"key": "key",
+									"value": "{{key}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Mark Board as viewed",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/1/boards/:id/markedAsViewed?token={{token}}&key={{key}}",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"1",
+								"boards",
+								":id",
+								"markedAsViewed"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "{{token}}"
+								},
+								{
+									"key": "key",
+									"value": "{{key}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a Board",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/1/boards/:id?key={{key}}&token={{token}}",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"1",
+								"boards",
+								":id"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "key",
+			"value": "524ffe08d260e406ac98d32a455c4391"
+		},
+		{
+			"key": "idBoard",
+			"value": "63752e82c3cc8c0365fed452"
+		},
+		{
+			"key": "email",
+			"value": "selma@gmail.com"
+		},
+		{
+			"key": "name",
+			"value": "new demo"
+		},
+		{
+			"key": "idMember",
+			"value": "637240c29dcd620084d5acce"
+		},
+		{
+			"key": "id",
+			"value": ""
+		}
+	]
+}
